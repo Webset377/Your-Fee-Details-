@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Fee Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", Arial, sans-serif;
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            flex-direction: column;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(255, 204, 0, 0.5);
+        }
+        .container h1 { color: #ffcc00; }
+        .input-field {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+        }
+        .submit-button, .logout-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .pay-button {
+  width: 100%;
+  padding: 14px;
+  background: #5ABC2D;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+        .submit-button {
+            background: linear-gradient(45deg, #ffcc00, #ff9900);
+            color: #222;
+        }
+        .logout-button {
+            background: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Form -->
+    <div class="container" id="login-container">
+        <h1>Fee Details</h1>
+        <p>अब आप अपनी डिजिटल फीस डिटेल्स देख सकते हैं!</p>
+        <form id="loginForm">
+            <input class="input-field" id="username" type="text" placeholder="Enter your Name" required />
+            <input class="input-field" id="class1" type="number" placeholder="Enter your Class" required />
+            <input class="input-field" id="password" type="password" placeholder="Set your Password" required />
+            <button class="submit-button" type="submit">Get Details</button>
+        </form>
+    </div>
+
+    <!-- Password Verification Form for Dashboard -->
+    <div class="container" id="password-container" style="display: none;">
+        <h1>Enter Password</h1>
+        <p>Please enter your password to access the dashboard.</p>
+        <input class="input-field" id="verify-password" type="password" placeholder="Enter your Password" required />
+        <button class="submit-button" onclick="verifyPassword()">See Details </button>
+        <button class="pay-button" onclick="ss()">Fee Pay</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="container" id="dashboard-container" style="display: none;">
+        <h1>Welcome to Your Dashboard</h1>
+        <p id="user-info"></p>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const username = localStorage.getItem("username");
+        const storedPassword = localStorage.getItem("password");
+        const userClass = localStorage.getItem("class1");
+
+        if (username && storedPassword && userClass) {
+            showPasswordPrompt();  // Agar data stored hai to password maangega
+        } else {
+            showLogin();  // Agar data nahi hai to login form show karega
+        }
+    });
+    function ss(){
+    window.location = 'Fee_Pay.html'  
+    
+    }
+
+    function showLogin() {
+        document.getElementById("login-container").style.display = "block";
+        document.getElementById("password-container").style.display = "none";
+        document.getElementById("dashboard-container").style.display = "none";
+    }
+
+    function showPasswordPrompt() {
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("password-container").style.display = "block";
+        document.getElementById("dashboard-container").style.display = "none";
+    }
+
+    function showDashboard() {
+        const username = localStorage.getItem("username");
+        const userClass = localStorage.getItem("class1");
+        document.getElementById("user-info").innerText = `Hello, ${username}! You are in class ${userClass}.`;
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("password-container").style.display = "none";
+        document.getElementById("dashboard-container").style.display = "block";
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const userClass = document.getElementById("class1").value;
+        const password = document.getElementById("password").value;
+
+        if (username && userClass && password) {
+            localStorage.setItem("username", username);
+            localStorage.setItem("class1", userClass);
+            localStorage.setItem("password", password);
+            showPasswordPrompt();
+        } else {
+            alert("⚠️ Please fill in all fields.");
+        }
+    });
+
+    function verifyPassword() {
+        const storedPassword = localStorage.getItem("password");
+        const enteredPassword = document.getElementById("verify-password").value;
+
+        if (storedPassword && enteredPassword === storedPassword) {
+            showDashboard();
+            window.location = 'Fee_Data.html'
+        } else {
+            alert("❌ Incorrect Password. Try again!");
+        }
+    }
+
+    function logout() {
+        localStorage.clear(); // Sare data ko remove karega
+        showLogin(); // Dobara login form dikhayega
+    }
+</script>
+
+</body>
+</html>
