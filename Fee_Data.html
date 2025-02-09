@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fee Sheet</title>
+  
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: ;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    /* Table Styling */
+    .fee-table {
+      width: 80%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      text-align: center;
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      font-size: 1px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    th {
+      background: rgba(0, 0, 0, 0.2);
+      color: #fff;
+    }
+
+    td {
+      color: #fff;
+    }
+
+    .paid {
+      color: #4CAF50;
+      font-weight: bold;
+      background: rgba(76, 175, 80, 0.2);
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    .pending {
+      color: #ff5722;
+      font-weight: bold;
+      background: rgba(255, 87, 34, 0.2);
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    .receipt-btn {
+      background: #ff9800;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .receipt-btn:hover {
+      background: #FF5B5B;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .fee-table {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="fee-table">
+    <h2>M.M.K PUBLIC SCHOOL</h2>
+    <h3>
+      <span>Name: <u id="name"></u></span> |
+      <span>Class: <u id="class"></u></span>
+    </h3>
+    
+    <table>
+      <tr>
+        <th>S.N</th>
+        <th>Month</th>
+        <th>Status</th>
+        <th>Receipt</th>
+      </tr>
+      
+      <!-- Months Rows -->
+      <script>
+        let months = ["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
+        for (let i = 0; i < months.length; i++) {
+          document.write(`
+            <tr>
+              <td>${i + 1}</td>
+              <td>${months[i]}</td>
+              <td>
+                <span id="pn${i + 1}" class="pending">PENDING</span>
+                <span id="pd${i + 1}" class="paid" hidden>PAID</span>
+              </td>
+              <td><button onclick="er()" id="v${i + 1}" class="receipt-btn" hidden>View</button></td>
+            </tr>
+          `);
+        }
+      </script>
+
+      <!-- Extra Fees -->
+      <tr>
+        <td colspan="2"><b>Registration Fee</b></td>
+        <td><span class="paid">₹1000 PAID</span></td>
+        <td><button onclick="er()" class="receipt-btn">View</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><b>Exam Fee</b></td>
+        <td><span class="pending">₹600 PENDING</span></td>
+        <td><button class="receipt-btn">View</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><b>Total Amount Available</b></td>
+        <td colspan="2" style="color: #FFD700; font-size: 18px;"><b></b></td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+  function er(){
+    window.location = 'Fee_Slip.html'
+  }
+    function updateFeeStatus() {
+        let paidMonths = JSON.parse(localStorage.getItem('paidMonths')) || []; // Paid months list
+        let totalMonths = 12; // Total 12 months
+
+        for (let i = 1; i <= totalMonths; i++) {
+            let pendingSpan = document.getElementById(`pn${i}`);
+            let paidSpan = document.getElementById(`pd${i}`);
+            let viewButton = document.getElementById(`v${i}`);
+
+            if (paidMonths.includes(i)) {
+                // If the month is paid, show "PAID" and View button
+                paidSpan.hidden = false;
+                pendingSpan.hidden = true;
+                viewButton.hidden = false;
+            } else {
+                // Otherwise, show "PENDING"
+                pendingSpan.hidden = false;
+                paidSpan.hidden = true;
+                viewButton.hidden = true;
+            }
+        }
+    }
+
+    // Function to display student name and class
+    function displayStudentInfo() {
+        let nm = localStorage.getItem('username') || "Unknown";
+        let cl = localStorage.getItem('class1') || "N/A";
+        document.getElementById('name').innerText = nm;
+        document.getElementById('class').innerText = cl;
+    }
+
+    // Initialize functions
+    displayStudentInfo();
+    updateFeeStatus();
+  </script>
+
+</body>
+
+</html>

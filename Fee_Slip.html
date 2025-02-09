@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Slip</title>
+    <style>
+        * {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .fee-slip {
+            background: #fff;
+            padding: 20px;
+            width: 350px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .fee-slip h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .details {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .details p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #777;
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fee-slip">
+        <h2>Last Fee Slip</h2>
+        <div class="details">
+            <p><strong>Name:</strong> <span id="name"></span></p>
+            <p><strong>Class:</strong> <span id="class"></span></p>
+            <p><strong>Date:</strong> <span id="date"></span></p>
+            <p><strong>Month:</strong> <span id="month"></span></p>
+        </div>
+        <p class="amount">Total Fee: ₹<span id="fee"></span></p>
+        <div class="footer">
+            <p>Payment Due: <span id="due-date"></span></p>
+            <p>Contact: <span id="contact"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // LocalStorage से डेटा लोड करना
+        let name = localStorage.getItem('username') || "N/A";
+        let class1 = localStorage.getItem('class1') || "N/A";
+        let date = localStorage.getItem('DATE') || new Date().toLocaleDateString(); // आज की तारीख डिफ़ॉल्ट
+        let monthsCount = parseInt(localStorage.getItem('MONTHS_COUNT')) || 1; // कितने महीने की फीस दी गई
+        let amount = localStorage.getItem('AMOUNT') || "0";
+
+        // महीनों की लिस्ट
+        let monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        // करंट मंथ निकालना
+        let currentMonthIndex = new Date().getMonth(); // 0 से 11 तक का index (जनवरी = 0, दिसंबर = 11)
+        let paidMonths = [];
+
+        // पिछले X महीनों को निकालना
+        for (let i = 0; i < monthsCount; i++) {
+            let monthIndex = (currentMonthIndex - i + 12) % 12; // रोटेट करके सही महीने निकालना
+            paidMonths.unshift(monthNames[monthIndex]); // पहले वाले महीनों को लिस्ट में जोड़ना
+        }
+
+        // सही फॉर्मेट में दिखाना
+        let monthFormatted = paidMonths.length > 1 ? `${paidMonths[0]} to ${paidMonths[paidMonths.length - 1]}` : paidMonths[0];
+
+        // HTML में डेटा अपडेट करना
+        document.getElementById("name").textContent = name;
+        document.getElementById("class").textContent = class1;
+        document.getElementById("date").textContent = date;
+        document.getElementById("month").textContent = monthFormatted;
+        document.getElementById("fee").textContent = amount;
+    </script>
+
+</body>
+</html>

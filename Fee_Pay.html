@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Fee Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #4CAF50, #2E8B57);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input, button {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+     select   {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+        input:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Pay Fee</h2>
+
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="father_name">Date:</label>
+        <input type="date" id="father_name" name="father_name" placeholder="Enter Date due to Paid" required>
+
+        <label for="class1">Your Class:</label>
+      <select name="class1" id="class1">
+        <option value="" disabled selected>SELECT YOUR CLASS</option>
+        <option value="N.C">N.C</option>
+      <option value="L.K.G">L.K.G</option>
+      <option value="U.K.G">U.K.G</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+
+        <label for="amount">Enter Amount:</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+
+        <label for="months">Select Months:</label>
+        <select id="months" name="months" required>
+            <option value="" disabled selected>Choose months</option>
+            <option value="1">1 Month</option>
+            <option value="2">2 Months</option>
+            <option value="3">3 Months</option>
+            <option value="4">4 Months</option>
+            <option value="5">5 Months</option>
+            <option value="6">6 Months</option>
+            <option value="7">7 Months</option>
+            <option value="8">8 Months</option>
+            <option value="9">9 Months</option>
+            <option value="10">10 Months</option>
+            <option value="11">11 Months</option>
+            <option value="12">12 Months</option>
+        </select>
+
+        <button onclick="storeData()">Proceed to Pay</button>
+    </div>
+
+    <script>
+        function storeData() {
+            // User details
+            const name = document.getElementById('name').value;
+            const fatherName = document.getElementById('father_name').value;
+            const class1 = document.getElementById('class1').value;
+            const amount = document.getElementById('amount').value;
+            const months = document.getElementById('months').value;
+
+            if (!name || !fatherName || !class1 || !amount || !months) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            // Store in localStorage
+            localStorage.setItem("username", name);
+            localStorage.setItem("DATE", fatherName);
+            localStorage.setItem("class1", class1);
+            localStorage.setItem("AMOUNT", amount);
+
+            // Convert selected months into an array for Fee Sheet
+            let paidMonths = [];
+            for (let i = 1; i <= months; i++) {
+                paidMonths.push(i);
+            }
+            localStorage.setItem("paidMonths", JSON.stringify(paidMonths));
+
+            // Redirect to Fee Sheet Page
+            window.location = 'Fee_Data.html';
+        }
+    </script>
+
+</body>
+
+</html>
